@@ -6,11 +6,13 @@ import {
   getValidationPipeConfig,
   initSwaggerConfig,
 } from './core/config';
+import { GrpcExceptionFilter } from './shared/filters';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe(getValidationPipeConfig()));
+  app.useGlobalFilters(new GrpcExceptionFilter());
   app.enableCors(getCorsConfig());
 
   initSwaggerConfig(app);
