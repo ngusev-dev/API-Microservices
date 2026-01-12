@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
+import { AllConfigs } from 'src/config';
 
 @Injectable()
 export class RedisService
@@ -14,12 +15,12 @@ export class RedisService
 {
   private readonly logger = new Logger(RedisService.name);
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(private readonly configService: ConfigService<AllConfigs>) {
     super({
-      username: configService.getOrThrow<string>('REDIS_USER'),
-      password: configService.getOrThrow<string>('REDIS_PASSWORD'),
-      host: configService.getOrThrow<string>('REDIS_HOST'),
-      port: configService.getOrThrow<number>('REDIS_PORT'),
+      username: configService.get('redis.user', { infer: true }),
+      password: configService.get('redis.password', { infer: true }),
+      host: configService.get('redis.host', { infer: true }),
+      port: configService.get('redis.port', { infer: true }),
       maxRetriesPerRequest: 5,
       enableOfflineQueue: true,
     });
