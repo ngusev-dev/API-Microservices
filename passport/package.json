@@ -1,0 +1,24 @@
+{
+  "name": "passport",
+  "version": "1.0.0",
+  "description": "Passport authentication module for NestJS",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "commonjs",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.8",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.11",
+    "@nestjs/core": "^11.1.11",
+    "reflect-metadata": "^0.2.2",
+    "txjs": "^0.1.1"
+  }
+}
