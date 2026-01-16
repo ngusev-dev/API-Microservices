@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -9,11 +10,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { VerifyOtpRequest, SendOtpRequest } from './dto';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { AuthClientGrpc } from './auth.grpc';
 import type { Request, Response } from 'express';
 import { lastValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
+import { Authorized, Protected } from 'src/shared/decorators';
 
 @Controller('auth')
 export class AuthController {
