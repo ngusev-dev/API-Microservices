@@ -2,6 +2,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import type { ClientGrpc } from '@nestjs/microservices';
 import type {
   AuthServiceClient,
+  RefreshRequest,
   SendOtpRequest,
   VerifyOtpRequest,
 } from 'contracts/gen/auth';
@@ -23,5 +24,9 @@ export class AuthClientGrpc implements OnModuleInit {
 
   verifyOtp(request: VerifyOtpRequest) {
     return this.authServiceClient.verifyOtp(request);
+  }
+
+  refresh(request: RefreshRequest) {
+    return this.authServiceClient.refresh(request);
   }
 }

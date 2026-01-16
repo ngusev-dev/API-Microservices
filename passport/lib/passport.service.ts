@@ -31,7 +31,7 @@ export class PassportService {
     return `${userPart}.${iatPart}.${expPart}.${mac}`;
   }
 
-  public verify(secretKey: string, token: string) {
+  public verify(token: string) {
     const parts = token.split(".");
 
     if (parts.length !== 4)
@@ -43,7 +43,7 @@ export class PassportService {
     const [userPart, iatPart, expPart, hmac] = parts;
 
     const serialized = this.serialize(userPart, iatPart, expPart);
-    const computedHmac = this.computeHmac(secretKey, serialized);
+    const computedHmac = this.computeHmac(this.SECRET_KEY, serialized);
 
     if (!constantTimerEqual(hmac, computedHmac))
       return {

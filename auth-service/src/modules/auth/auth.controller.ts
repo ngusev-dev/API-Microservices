@@ -6,6 +6,8 @@ import type {
   VerifyOtpResponse,
   SendOtpRequest,
   SendOtpResponse,
+  RefreshRequest,
+  RefreshResponse,
 } from 'contracts/gen/auth';
 
 @Controller()
@@ -20,5 +22,10 @@ export class AuthController {
   @GrpcMethod('AuthService', 'VerifyOtp')
   async VerifyOtp(data: VerifyOtpRequest): Promise<VerifyOtpResponse> {
     return await this.authService.verifyOtp(data);
+  }
+
+  @GrpcMethod('AuthService', 'Refresh')
+  Refresh(data: RefreshRequest): RefreshResponse {
+    return this.authService.refresh(data);
   }
 }

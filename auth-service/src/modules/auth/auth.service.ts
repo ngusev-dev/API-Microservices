@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type {
+  RefreshRequest,
   SendOtpRequest,
   SendOtpResponse,
   VerifyOtpRequest,
@@ -10,13 +11,28 @@ import type { Account } from 'prisma/generated/client';
 import { OtpService } from '../otp/otp.service';
 import { RpcException } from '@nestjs/microservices';
 import { RpcStatus } from 'common';
+import { PassportService, TokenPyaload } from 'passport';
+import { ConfigService } from '@nestjs/config';
+import { AllConfigs } from 'src/config';
 
 @Injectable()
 export class AuthService {
+  private readonly ACCESS_TOKEN_TTL: number;
+  private readonly REFRESH_TOKEN_TTL: number;
+
   constructor(
+    private readonly configService: ConfigService<AllConfigs>,
     private readonly authRepository: AuthRepository,
     private readonly otpService: OtpService,
-  ) {}
+    private readonly passportService: PassportService,
+  ) {
+    this.ACCESS_TOKEN_TTL = configService.get('passport.ttlAccess', {
+      infer: true,
+    });
+    this.REFRESH_TOKEN_TTL = configService.get('passport.ttlRefresh', {
+      infer: true,
+    });
+  }
 
   public async sendOtp(data: SendOtpRequest): Promise<SendOtpResponse> {
     const { identifier, type } = data;
@@ -73,9 +89,34 @@ export class AuthService {
         isPhoneVerified: true,
       });
 
-    return {
-      accessToken: '123456',
-      refreshToken: '123456',
-    };
+    return this.generateTokens(account.id);
+  }
+
+  refresh(data: RefreshRequest) {
+    const { refreshToken } = data;
+
+    const result = this.passportService.verify(refreshToken);
+
+    if (!result.valid) {
+      throw new RpcException({
+        code: RpcStatus.UNAUTHENTICATED,
+        details: result.reason,
+      });
+    }
+
+    return this.generateTokens(result.userId);
+  }
+
+  private generateTokens(userId: string) {
+    const accessToken = this.passportService.generate(
+      userId,
+      this.ACCESS_TOKEN_TTL,
+    );
+    const refreshToken = this.passportService.generate(
+      userId,
+      this.REFRESH_TOKEN_TTL,
+    );
+
+    return { accessToken, refreshToken };
   }
 }
