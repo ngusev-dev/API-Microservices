@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { RedisModule } from './infrastructure/redis/redis.module';
 import { OtpModule } from './modules/otp/otp.module';
 import { databaseEnv, grpcEnv, passportEnv, redisEnv } from './config';
+import { AccountModule } from './modules/account/account.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { databaseEnv, grpcEnv, passportEnv, redisEnv } from './config';
     RedisModule,
     AuthModule,
     OtpModule,
+    AccountModule,
   ],
   controllers: [],
   providers: [],

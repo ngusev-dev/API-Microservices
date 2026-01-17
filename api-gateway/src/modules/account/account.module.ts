@@ -1,26 +1,27 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AuthClientGrpc } from './auth.grpc';
+import { AccountClientGrpc } from './account.grpc';
+import { ConfigService } from '@nestjs/config';
 import { PROTO_PATHS } from 'contracts';
 
 @Module({
   imports: [
     ClientsModule.registerAsync([
       {
-        name: 'AUTH_PACKAGE',
+        name: 'ACCOUNT_PACKAGE',
         useFactory: () => ({
           transport: Transport.GRPC,
           options: {
-            package: 'auth.v1',
-            protoPath: PROTO_PATHS.AUTH,
+            package: 'account.v1',
+            protoPath: PROTO_PATHS.ACCOUNT,
             url: 'localhost:50051',
           },
         }),
+        inject: [ConfigService],
       },
     ]),
   ],
-  controllers: [AuthController],
-  providers: [AuthClientGrpc],
+  providers: [AccountClientGrpc],
+  exports: [AccountClientGrpc],
 })
-export class AuthModule {}
+export class AccountModule {}
