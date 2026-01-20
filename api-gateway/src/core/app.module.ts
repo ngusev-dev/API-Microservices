@@ -5,6 +5,7 @@ import { AuthModule } from 'src/modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from 'passport';
 import { getPassportFactory } from './config';
+import { AccountModule } from 'src/modules/account/account.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { getPassportFactory } from './config';
       inject: [ConfigService],
     }),
     AuthModule,
+    AccountModule,
   ],
   controllers: [AppController],
   providers: [AppService],

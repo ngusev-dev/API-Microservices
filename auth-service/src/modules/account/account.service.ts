@@ -1,13 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable } from '@nestjs/common';
 import {
-  Role,
   type GetAccountRequest,
   type GetAccountResponse,
 } from 'contracts/gen/account';
 import { AccountRepository } from './account.resitory';
 import { RpcException } from '@nestjs/microservices';
 import { convertEnum, RpcStatus } from 'common';
+
+export enum Role {
+  USER = 0,
+  ADMIN = 1,
+  UNRECOGNIZED = -1,
+}
 
 @Injectable()
 export class AccountService {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString, Validate } from 'class-validator';
 import { IdentifierValidator } from 'src/shared/validators';
@@ -6,7 +5,7 @@ import { ContactEnum, type ContactType } from '../../enums';
 
 export class SendOtpRequest {
   @ApiProperty({
-    examples: ['test@mail.ru', '79163334422'],
+    example: '79163334422',
   })
   @IsString()
   @Validate(IdentifierValidator)

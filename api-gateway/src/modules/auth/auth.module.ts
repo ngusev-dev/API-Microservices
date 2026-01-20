@@ -3,6 +3,7 @@ import { AuthController } from './auth.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AuthClientGrpc } from './auth.grpc';
 import { PROTO_PATHS } from 'contracts';
+import { AccountModule } from '../account/account.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PROTO_PATHS } from 'contracts';
         }),
       },
     ]),
+    AccountModule,
   ],
   controllers: [AuthController],
   providers: [AuthClientGrpc],
