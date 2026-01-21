@@ -13,7 +13,10 @@ export class OtpService {
 
   constructor(private readonly redisService: RedisService) {}
 
-  async send(indentifier: string, type: 'phone' | 'email'): Promise<number> {
+  async send(
+    indentifier: string,
+    type: 'phone' | 'email',
+  ): Promise<{ code: number; hash: string }> {
     const { code, hash } = this.generateCode();
 
     await this.redisService.set(
@@ -23,7 +26,7 @@ export class OtpService {
       300,
     );
 
-    return code;
+    return { code, hash };
   }
 
   async verify(indentifier: string, code: string, type: 'phone' | 'email') {

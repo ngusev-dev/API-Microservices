@@ -19,7 +19,7 @@ export class VerifyOtpRequest {
   public identifier: string;
 
   @ApiProperty({
-    example: '123456',
+    example: '12345',
   })
   @IsNumberString()
   @IsNotEmpty()

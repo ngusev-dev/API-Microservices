@@ -1,8 +1,16 @@
 import { Controller } from '@nestjs/common';
 import { AccountService } from './account.service';
 import type {
+  ConfirmEmailChangeRequest,
+  ConfirmEmailChangeResponse,
+  ConfirmPhoneChangeRequest,
+  ConfirmPhoneChangeResponse,
   GetAccountRequest,
   GetAccountResponse,
+  InitEmailChangeRequest,
+  InitEmailChangeResponse,
+  InitPhoneChangeRequest,
+  InitPhoneChangeResponse,
 } from 'contracts/gen/account';
 import { GrpcMethod } from '@nestjs/microservices';
 
@@ -13,5 +21,33 @@ export class AccountController {
   @GrpcMethod('AccountService', 'GetAccount')
   async getAccount(data: GetAccountRequest): Promise<GetAccountResponse> {
     return await this.accountService.getAccount(data);
+  }
+
+  @GrpcMethod('AccountService', 'InitEmailChange')
+  async initEmailChange(
+    data: InitEmailChangeRequest,
+  ): Promise<InitEmailChangeResponse> {
+    return await this.accountService.initEmailChange(data);
+  }
+
+  @GrpcMethod('AccountService', 'ConfirmEmailChange')
+  async confirmEmailChange(
+    data: ConfirmEmailChangeRequest,
+  ): Promise<ConfirmEmailChangeResponse> {
+    return await this.accountService.confirmEmailChange(data);
+  }
+
+  @GrpcMethod('AccountService', 'InitPhoneChange')
+  async initPhoneChange(
+    data: InitPhoneChangeRequest,
+  ): Promise<InitPhoneChangeResponse> {
+    return await this.accountService.initPhoneChange(data);
+  }
+
+  @GrpcMethod('AccountService', 'ConfirmPhoneChange')
+  async confirmPhoneChange(
+    data: ConfirmPhoneChangeRequest,
+  ): Promise<ConfirmPhoneChangeResponse> {
+    return await this.accountService.confirmPhoneChange(data);
   }
 }

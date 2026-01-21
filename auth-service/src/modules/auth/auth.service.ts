@@ -11,9 +11,10 @@ import type { Account } from 'prisma/generated/client';
 import { OtpService } from '../otp/otp.service';
 import { RpcException } from '@nestjs/microservices';
 import { RpcStatus } from 'common';
-import { PassportService, TokenPyaload } from 'passport';
+import { PassportService } from 'passport';
 import { ConfigService } from '@nestjs/config';
 import { AllConfigs } from 'src/config';
+import { UserRepository } from 'src/shared/repositories';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,7 @@ export class AuthService {
   constructor(
     private readonly configService: ConfigService<AllConfigs>,
     private readonly authRepository: AuthRepository,
+    private readonly userRepository: UserRepository,
     private readonly otpService: OtpService,
     private readonly passportService: PassportService,
   ) {
@@ -40,9 +42,9 @@ export class AuthService {
     let account: Account | null = null;
 
     if (type === 'phone')
-      account = await this.authRepository.findByPhone(identifier);
+      account = await this.userRepository.findByPhone(identifier);
     else if (type === 'email')
-      account = await this.authRepository.findByEmail(identifier);
+      account = await this.userRepository.findByEmail(identifier);
 
     if (!account) {
       account = await this.authRepository.createAccount({
@@ -69,9 +71,9 @@ export class AuthService {
     let account: Account | null = null;
 
     if (type === 'phone')
-      account = await this.authRepository.findByPhone(identifier);
+      account = await this.userRepository.findByPhone(identifier);
     else if (type === 'email')
-      account = await this.authRepository.findByEmail(identifier);
+      account = await this.userRepository.findByEmail(identifier);
 
     if (!account)
       throw new RpcException({
@@ -80,12 +82,12 @@ export class AuthService {
       });
 
     if (type === 'phone' && !account.isPhoneVerified)
-      await this.authRepository.update(account.id, {
+      await this.userRepository.update(account.id, {
         isPhoneVerified: true,
       });
 
     if (type === 'email' && !account.isEmailVerified)
-      await this.authRepository.update(account.id, {
+      await this.userRepository.update(account.id, {
         isPhoneVerified: true,
       });
 
